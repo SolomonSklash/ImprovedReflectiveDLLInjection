@@ -1,7 +1,7 @@
-// Copyright (c) 2015, Dan Staples
+// Copyright ( c ) 2015, Dan Staples
 
 //===============================================================================================//
-// Copyright (c) 2012, Stephen Fewer of Harmony Security (www.harmonysecurity.com)
+// Copyright ( c ) 2012, Stephen Fewer of Harmony Security ( www.harmonysecurity.com )
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without modification, are permitted 
@@ -21,10 +21,10 @@
 // IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
 // FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
-// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+// CONSEQUENTIAL DAMAGES ( INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION ) HOWEVER CAUSED AND ON ANY 
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING NEGLIGENCE OR 
+// OTHERWISE ) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 // POSSIBILITY OF SUCH DAMAGE.
 //===============================================================================================//
 #ifndef _REFLECTIVEDLLINJECTION_REFLECTIVELOADER_H
@@ -37,11 +37,11 @@
 
 #include "ReflectiveDLLInjection.h"
 
-typedef HMODULE (WINAPI * LOADLIBRARYA)( LPCSTR );
-typedef FARPROC (WINAPI * GETPROCADDRESS)( HMODULE, LPCSTR );
-typedef LPVOID  (WINAPI * VIRTUALALLOC)( LPVOID, SIZE_T, DWORD, DWORD );
-typedef VOID    (WINAPI * EXITTHREAD)( DWORD );
-typedef DWORD   (NTAPI  * NTFLUSHINSTRUCTIONCACHE)( HANDLE, PVOID, ULONG );
+typedef HMODULE ( WINAPI * LOADLIBRARYA )( LPCSTR );
+typedef FARPROC ( WINAPI * GETPROCADDRESS )( HMODULE, LPCSTR );
+typedef LPVOID  ( WINAPI * VIRTUALALLOC )( LPVOID, SIZE_T, DWORD, DWORD );
+typedef VOID    ( WINAPI * EXITTHREAD )( DWORD );
+typedef DWORD   ( NTAPI  * NTFLUSHINSTRUCTIONCACHE )( HANDLE, PVOID, ULONG );
 
 /** NOTE: module hashes are computed using all-caps unicode strings */
 #define KERNEL32DLL_HASH				0x6A4ABC5B
@@ -57,8 +57,8 @@ typedef DWORD   (NTAPI  * NTFLUSHINSTRUCTIONCACHE)( HANDLE, PVOID, ULONG );
 #define IMAGE_REL_BASED_ARM_MOV32A		5
 #define IMAGE_REL_BASED_ARM_MOV32T		7
 
-#define ARM_MOV_MASK					(DWORD)(0xFBF08000)
-#define ARM_MOV_MASK2					(DWORD)(0xFBF08F00)
+#define ARM_MOV_MASK					( DWORD )( 0xFBF08000 )
+#define ARM_MOV_MASK2					( DWORD )( 0xFBF08F00 )
 #define ARM_MOVW						0xF2400000
 #define ARM_MOVT						0xF2C00000
 
@@ -78,7 +78,7 @@ __forceinline DWORD hash( char * c )
 	{
 		h = ror( h );
         h += *c;
-	} while( *++c );
+	} while ( *++c );
 
     return h;
 }
@@ -91,7 +91,7 @@ typedef struct _UNICODE_STR
 } UNICODE_STR, *PUNICODE_STR;
 
 // WinDbg> dt -v ntdll!_LDR_DATA_TABLE_ENTRY
-//__declspec( align(8) ) 
+//__declspec( align( 8 )) 
 typedef struct _LDR_DATA_TABLE_ENTRY
 {
 	//LIST_ENTRY InLoadOrderLinks; // As we search from PPEB_LDR_DATA->InMemoryOrderModuleList we dont use the first entry.

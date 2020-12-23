@@ -1,5 +1,5 @@
 //===============================================================================================//
-// Copyright (c) 2012, Stephen Fewer of Harmony Security (www.harmonysecurity.com)
+// Copyright ( c ) 2012, Stephen Fewer of Harmony Security ( www.harmonysecurity.com )
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without modification, are permitted 
@@ -19,10 +19,10 @@
 // IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
 // FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
-// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+// CONSEQUENTIAL DAMAGES ( INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION ) HOWEVER CAUSED AND ON ANY 
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING NEGLIGENCE OR 
+// OTHERWISE ) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 // POSSIBILITY OF SUCH DAMAGE.
 //===============================================================================================//
 #include "GetProcAddressR.h"
@@ -34,11 +34,11 @@ FARPROC WINAPI GetProcAddressR( HANDLE hModule, LPCSTR lpProcName )
 	UINT_PTR uiLibraryAddress = 0;
 	FARPROC fpResult          = NULL;
 
-	if( hModule == NULL )
+	if ( hModule == NULL )
 		return NULL;
 
 	// a module handle is really its base address
-	uiLibraryAddress = (UINT_PTR)hModule;
+	uiLibraryAddress = ( UINT_PTR )hModule;
 
 	__try
 	{
@@ -50,12 +50,12 @@ FARPROC WINAPI GetProcAddressR( HANDLE hModule, LPCSTR lpProcName )
 		PIMAGE_EXPORT_DIRECTORY pExportDirectory = NULL;
 			
 		// get the VA of the modules NT Header
-		pNtHeaders = (PIMAGE_NT_HEADERS)(uiLibraryAddress + ((PIMAGE_DOS_HEADER)uiLibraryAddress)->e_lfanew);
+		pNtHeaders = ( PIMAGE_NT_HEADERS )( uiLibraryAddress + (( PIMAGE_DOS_HEADER )uiLibraryAddress )->e_lfanew );
 
-		pDataDirectory = (PIMAGE_DATA_DIRECTORY)&pNtHeaders->OptionalHeader.DataDirectory[ IMAGE_DIRECTORY_ENTRY_EXPORT ];
+		pDataDirectory = ( PIMAGE_DATA_DIRECTORY )&pNtHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];
 
 		// get the VA of the export directory
-		pExportDirectory = (PIMAGE_EXPORT_DIRECTORY)( uiLibraryAddress + pDataDirectory->VirtualAddress );
+		pExportDirectory = ( PIMAGE_EXPORT_DIRECTORY )( uiLibraryAddress + pDataDirectory->VirtualAddress );
 			
 		// get the VA for the array of addresses
 		uiAddressArray = ( uiLibraryAddress + pExportDirectory->AddressOfFunctions );
@@ -67,42 +67,42 @@ FARPROC WINAPI GetProcAddressR( HANDLE hModule, LPCSTR lpProcName )
 		uiNameOrdinals = ( uiLibraryAddress + pExportDirectory->AddressOfNameOrdinals );
 
 		// test if we are importing by name or by ordinal...
-		if( ((DWORD)lpProcName & 0xFFFF0000 ) == 0x00000000 )
+		if ((( DWORD )lpProcName & 0xFFFF0000 ) == 0x00000000 )
 		{
 			// import by ordinal...
 
-			// use the import ordinal (- export ordinal base) as an index into the array of addresses
-			uiAddressArray += ( ( IMAGE_ORDINAL( (DWORD)lpProcName ) - pExportDirectory->Base ) * sizeof(DWORD) );
+			// use the import ordinal ( - export ordinal base ) as an index into the array of addresses
+			uiAddressArray += (( IMAGE_ORDINAL(( DWORD )lpProcName ) - pExportDirectory->Base ) * sizeof( DWORD ));
 
 			// resolve the address for this imported function
-			fpResult = (FARPROC)( uiLibraryAddress + DEREF_32(uiAddressArray) );
+			fpResult = ( FARPROC )( uiLibraryAddress + DEREF_32( uiAddressArray ));
 		}
 		else
 		{
 			// import by name...
 			DWORD dwCounter = pExportDirectory->NumberOfNames;
-			while( dwCounter-- )
+			while ( dwCounter-- )
 			{
-				char * cpExportedFunctionName = (char *)(uiLibraryAddress + DEREF_32( uiNameArray ));
+				char * cpExportedFunctionName = ( PCHAR )( uiLibraryAddress + DEREF_32( uiNameArray ));
 				
 				// test if we have a match...
-				if( strcmp( cpExportedFunctionName, lpProcName ) == 0 )
+				if ( strcmp( cpExportedFunctionName, lpProcName ) == 0 )
 				{
 					// use the functions name ordinal as an index into the array of name pointers
-					uiAddressArray += ( DEREF_16( uiNameOrdinals ) * sizeof(DWORD) );
+					uiAddressArray += ( DEREF_16( uiNameOrdinals ) * sizeof( DWORD ));
 					
 					// calculate the virtual address for the function
-					fpResult = (FARPROC)(uiLibraryAddress + DEREF_32( uiAddressArray ));
+					fpResult = ( FARPROC )( uiLibraryAddress + DEREF_32( uiAddressArray ));
 					
 					// finish...
 					break;
 				}
 						
 				// get the next exported function name
-				uiNameArray += sizeof(DWORD);
+				uiNameArray += sizeof( DWORD );
 
 				// get the next exported function name ordinal
-				uiNameOrdinals += sizeof(WORD);
+				uiNameOrdinals += sizeof( WORD );
 			}
 		}
 	}

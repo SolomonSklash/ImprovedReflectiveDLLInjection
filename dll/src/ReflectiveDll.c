@@ -3,7 +3,7 @@
 //===============================================================================================//
 #include "ReflectiveLoader.h"
 
-// You can use this value as a pseudo hinstDLL value (defined and set via ReflectiveLoader.c)
+// You can use this value as a pseudo hinstDLL value ( defined and set via ReflectiveLoader.c )
 extern HINSTANCE hAppInstance;
 //===============================================================================================//
 BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved )
@@ -12,8 +12,8 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved )
 	switch( dwReason ) 
     { 
 		case DLL_QUERY_HMODULE:
-			if( lpReserved != NULL )
-				*(HMODULE *)lpReserved = hAppInstance;
+			if ( lpReserved != NULL )
+				*( HMODULE * )lpReserved = hAppInstance;
 			break;
 		case DLL_PROCESS_ATTACH:
 			hAppInstance = hinstDLL;
