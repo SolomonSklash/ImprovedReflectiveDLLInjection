@@ -1,9 +1,10 @@
 //===============================================================================================//
-// This is a stub for the actuall functionality of the DLL.
+// This is a stub for the actual functionality of the DLL.
 //===============================================================================================//
 #include "ReflectiveLoader.h"
 
 // You can use this value as a pseudo hinstDLL value ( defined and set via ReflectiveLoader.c )
+// TODO: What does this mean?
 extern HINSTANCE hAppInstance;
 //===============================================================================================//
 BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved )
@@ -17,7 +18,7 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved )
 			break;
 		case DLL_PROCESS_ATTACH:
 			hAppInstance = hinstDLL;
-			MessageBoxA( NULL, "Hello from DllMain!", "Reflective Dll Injection", MB_OK );
+			//MessageBoxA( NULL, "Hello from DllMain!", "Reflective Dll Injection", MB_OK );
 			break;
 		case DLL_PROCESS_DETACH:
 		case DLL_THREAD_ATTACH:

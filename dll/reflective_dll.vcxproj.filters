@@ -22,9 +22,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ReflectiveDLLInjection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ReflectiveLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>

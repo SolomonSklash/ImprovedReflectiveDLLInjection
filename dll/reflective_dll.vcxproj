@@ -116,7 +116,6 @@ copy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)\bin\reflective_dll.x64.d
     <ClCompile Include="src\ReflectiveLoader.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ReflectiveDLLInjection.h" />
     <ClInclude Include="src\ReflectiveLoader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
