@@ -1,4 +1,5 @@
 #include "ReflectiveLoader.h"
+#include <intrin.h>
 
 typedef BOOL ( *EXPORTFUNC )( LPVOID, DWORD );
 
@@ -50,7 +51,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 
 	// Get the PEB
 	// TODO: Use kernel structure method instead of this way
-#ifdef WIN_X64
+#ifdef _WIN64
 	uiBaseAddress = __readgsqword( 0x60 );
 #else
 	uiBaseAddress = __readfsdword( 0x30 );

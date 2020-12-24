@@ -19,7 +19,7 @@
 typedef ULONG_PTR(WINAPI* REFLECTIVELOADER)(VOID);
 typedef BOOL(WINAPI* DLLMAIN)(HINSTANCE, DWORD, LPVOID);
 
-#define DLLEXPORT __declspec( dllexport ) 
+#define DLLEXPORT __declspec( dllexport )
 
 typedef HMODULE ( WINAPI * LOADLIBRARYA )( LPCSTR );
 typedef FARPROC ( WINAPI * GETPROCADDRESS )( HMODULE, LPCSTR );
@@ -35,16 +35,8 @@ typedef DWORD   ( NTAPI  * NTFLUSHINSTRUCTIONCACHE )( HANDLE, PVOID, ULONG );
 #define GETPROCADDRESS_HASH				0x7C0DFCAA
 #define VIRTUALALLOC_HASH				0x91AFCA54
 #define EXITTHREAD_HASH					0x60E0CEEF
-#define NTFLUSHINSTRUCTIONCACHE_HASH			0x534C0AB8
-#define RTLEXITUSERTHREAD_HASH				0xFF7F061A // Vista+
-
-#define IMAGE_REL_BASED_ARM_MOV32A		5
-#define IMAGE_REL_BASED_ARM_MOV32T		7
-
-#define ARM_MOV_MASK					( DWORD )( 0xFBF08000 )
-#define ARM_MOV_MASK2					( DWORD )( 0xFBF08F00 )
-#define ARM_MOVW						0xF2400000
-#define ARM_MOVT						0xF2C00000
+#define NTFLUSHINSTRUCTIONCACHE_HASH	0x534C0AB8
+#define RTLEXITUSERTHREAD_HASH			0xFF7F061A // Vista+
 
 #define HASH_KEY						13
 
@@ -78,7 +70,7 @@ typedef struct _UNICODE_STR
 //__declspec( align( 8 )) 
 typedef struct _LDR_DATA_TABLE_ENTRY
 {
-	//LIST_ENTRY InLoadOrderLinks; // As we search from PPEB_LDR_DATA->InMemoryOrderModuleList we dont use the first entry.
+	//LIST_ENTRY InLoadOrderLinks; // As we search from PPEB_LDR_DATA->InMemoryOrderModuleList we don't use the first entry.
 	LIST_ENTRY InMemoryOrderModuleList;
 	LIST_ENTRY InInitializationOrderModuleList;
 	PVOID DllBase;
