@@ -1,6 +1,4 @@
-//===============================================================================================//
 #include "ReflectiveLoader.h"
-//===============================================================================================//
 
 typedef BOOL ( *EXPORTFUNC )( LPVOID, DWORD );
 
@@ -10,7 +8,6 @@ HINSTANCE hAppInstance = NULL;
 /* This is the position independent reflective DLL loader. It parses the DLL image, 
  * loads it, and calls the exported function identified by the hashed function name
  * dwFunctionHash. */
-
 DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddress, DWORD dwFunctionHash, LPVOID lpUserData, DWORD nUserdataLen )
 {
 	// The functions needed, defined in ReflectiveLoader.h
@@ -73,12 +70,12 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 		// Clear uiValueC which will store the hash of the module name
 		uiValueC = 0;
 
-		// Compute the hash of the module name...
+		// Compute the hash of the module name
 		do
 		{
 			// TODO: Change hash function to FNV-1a
 			uiValueC = ror(( DWORD )uiValueC );
-			// Normalize to uppercase if the module name is in lowercase
+			// Normalize to uppercase if the module name is in lowercase - IOC
 			if ( *(( PBYTE )uiValueB ) >= 'a' )
 				uiValueC += *(( PBYTE )uiValueB ) - 0x20;
 			else
@@ -134,7 +131,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 					else if ( dwHashValue == EXITTHREAD_HASH )
 						pExitThread = ( EXITTHREAD )( uiBaseAddress + DEREF_32( uiAddressArray ));
 			
-					// Decrement our counter
+					// Decrement the counter
 					usCounter--;
 				}
 
@@ -182,14 +179,16 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 					// Get the VA for the array of addresses
 					uiAddressArray = ( uiBaseAddress + (( PIMAGE_EXPORT_DIRECTORY )uiExportDir )->AddressOfFunctions );
 
-					// Use this functions name ordinal as an index into the array of name pointers
+					// Use this function's name ordinal as an index into the array of name pointers
 					uiAddressArray += ( DEREF_16( uiNameOrdinals ) * sizeof( DWORD ));
 
-					// Store this functions VA
-					if ( dwHashValue == NTFLUSHINSTRUCTIONCACHE_HASH )
+					// Store this function's VA
+					if ( dwHashValue == NTFLUSHINSTRUCTIONCACHE_HASH ) {
 						pNtFlushInstructionCache = ( NTFLUSHINSTRUCTIONCACHE )( uiBaseAddress + DEREF_32( uiAddressArray ));
-					else if ( dwHashValue == RTLEXITUSERTHREAD_HASH )
+					}
+					else if ( dwHashValue == RTLEXITUSERTHREAD_HASH ) {
 						pRtlExitUserThread = ( EXITTHREAD )( uiBaseAddress + DEREF_32( uiAddressArray ));
+					}
 
 					// Decrement our counter
 					usCounter--;
@@ -220,6 +219,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 	// Get the VA of the NT Header for the PE to be loaded
 	uiHeaderValue = uiLibraryAddress + (( PIMAGE_DOS_HEADER )uiLibraryAddress )->e_lfanew;
 
+	// TODO: Get rid of RWX memory - IOC
 	// Allocate all the memory for the DLL to be loaded into. We can load at any address because we will  
 	// relocate the image. Also zeros all memory and marks it as READ, WRITE and EXECUTE to avoid any problems.
 	uiBaseAddress = ( ULONG_PTR )pVirtualAlloc( NULL, (( PIMAGE_NT_HEADERS )uiHeaderValue )->OptionalHeader.SizeOfImage, MEM_RESERVE|MEM_COMMIT, PAGE_EXECUTE_READWRITE );
@@ -238,7 +238,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 	// uiValueA = the VA of the first section
 	uiValueA = (( ULONG_PTR )&(( PIMAGE_NT_HEADERS )uiHeaderValue )->OptionalHeader + (( PIMAGE_NT_HEADERS )uiHeaderValue )->FileHeader.SizeOfOptionalHeader );
 	
-	// Iterate through all sections, loading them into memory.
+	// Iterate through all sections, loading them into memory
 	uiValueE = (( PIMAGE_NT_HEADERS )uiHeaderValue )->FileHeader.NumberOfSections;
 	while ( uiValueE-- )
 	{
@@ -258,7 +258,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 		uiValueA += sizeof( IMAGE_SECTION_HEADER );
 	}
 
-	// STEP 4: Process our image's import table
+	// STEP 4: Process the image's import table
 
 	// uiValueB = the address of the import directory
 	uiValueB = ( ULONG_PTR )&(( PIMAGE_NT_HEADERS )uiHeaderValue )->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
@@ -275,7 +275,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 
 		// uiValueD = VA of the OriginalFirstThunk
 		uiValueD = ( uiBaseAddress + (( PIMAGE_IMPORT_DESCRIPTOR )uiValueC )->OriginalFirstThunk );
-	
+
 		// uiValueA = VA of the IAT ( via first thunk not origionalfirstthunk )
 		uiValueA = ( uiBaseAddress + (( PIMAGE_IMPORT_DESCRIPTOR )uiValueC )->FirstThunk );
 
@@ -330,7 +330,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 	// uiValueB = the address of the relocation directory
 	uiValueB = ( ULONG_PTR )&(( PIMAGE_NT_HEADERS )uiHeaderValue )->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC];
 
-	// Check if their are any relocations present
+	// Check if there are any relocations present
 	if ((( PIMAGE_DATA_DIRECTORY )uiValueB )->Size )
 	{
 		// uiValueC is now the first entry ( IMAGE_BASE_RELOCATION )
@@ -348,7 +348,7 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 			// uiValueD is now the first entry in the current relocation block
 			uiValueD = uiValueC + sizeof( IMAGE_BASE_RELOCATION );
 
-			//Iterate through all the entries in the current block
+			// Iterate through all the entries in the current block
 			while ( uiValueB-- )
 			{
 				// Perform the relocation, skipping IMAGE_REL_BASED_ABSOLUTE as required.
@@ -376,15 +376,15 @@ DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddr
 		}
 	}
 
-	// STEP 6: Call our image's entry point
+	// STEP 6: Call the image's entry point
 
-	// uiValueA = the VA of our newly loaded DLL/EXE's entry point
+	// uiValueA = the VA of the newly loaded DLL/EXE's entry point
 	uiValueA = ( uiBaseAddress + (( PIMAGE_NT_HEADERS )uiHeaderValue )->OptionalHeader.AddressOfEntryPoint );
 
-	// We must flush the instruction cache to avoid stale code being used which was updated by our relocation processing.
+	// Flush the instruction cache to avoid stale code being used which was updated by the relocation processing.
 	pNtFlushInstructionCache(( HANDLE )-1, NULL, 0 );
 
-	// Call our respective entry point, fudging our hInstance value.
+	// Call the respective entry point, fudging the hInstance value.
 	// If we are injecting a DLL via LoadRemoteLibraryR we call DllMain and pass in our parameter ( via the DllMain lpReserved parameter )
 	(( DLLMAIN )uiValueA )(( HINSTANCE )uiBaseAddress, DLL_PROCESS_ATTACH, lpParameter );
 

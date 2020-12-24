@@ -1,11 +1,9 @@
-//===============================================================================================//
 #ifndef _REFLECTIVEDLLINJECTION_REFLECTIVELOADER_H
 #define _REFLECTIVEDLLINJECTION_REFLECTIVELOADER_H
-//===============================================================================================//
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 // TODO: Why is this included?
-#include <Winsock2.h>
+//#include <Winsock2.h>
 #include <intrin.h>
 
 //#include "ReflectiveDLLInjection.h"
@@ -49,7 +47,7 @@ typedef DWORD   ( NTAPI  * NTFLUSHINSTRUCTIONCACHE )( HANDLE, PVOID, ULONG );
 #define ARM_MOVT						0xF2C00000
 
 #define HASH_KEY						13
-//===============================================================================================//
+
 #pragma intrinsic( _rotr )
 
 __forceinline DWORD ror( DWORD d )
@@ -68,7 +66,7 @@ __forceinline DWORD hash( char * c )
 
     return h;
 }
-//===============================================================================================//
+
 typedef struct _UNICODE_STR
 {
   USHORT Length;
@@ -190,6 +188,6 @@ typedef struct
 	WORD	offset:12;
 	WORD	type:4;
 } IMAGE_RELOC, *PIMAGE_RELOC;
-//===============================================================================================//
+
 #endif
-//===============================================================================================//
+
