@@ -101,6 +101,7 @@ copy /y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)\bin\inject.exe"</Command
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</BufferSecurityCheck>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</BufferSecurityCheck>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX64</TargetMachine>

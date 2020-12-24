@@ -10,7 +10,7 @@ HINSTANCE hAppInstance = NULL;
 /* This is the position independent reflective DLL loader. It parses the DLL image, 
  * loads it, and calls the exported function identified by the hashed function name
  * dwFunctionHash. */
-   
+
 DLLEXPORT VOID WINAPI ReflectiveLoader( LPVOID lpParameter, LPVOID lpLibraryAddress, DWORD dwFunctionHash, LPVOID lpUserData, DWORD nUserdataLen )
 {
 	// The functions needed, defined in ReflectiveLoader.h
