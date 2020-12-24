@@ -1,6 +1,7 @@
 Build/
 Release/
 Debug/
+bin/
 x64/
 dll/Release/
 dll/Debug/
