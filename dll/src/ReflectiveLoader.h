@@ -2,11 +2,7 @@
 #define _REFLECTIVEDLLINJECTION_REFLECTIVELOADER_H
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-// TODO: Why is this included?
-//#include <Winsock2.h>
 #include <intrin.h>
-
-//#include "ReflectiveDLLInjection.h"
 
 #define DLL_QUERY_HMODULE		6
 
