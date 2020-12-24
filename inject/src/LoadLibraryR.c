@@ -639,7 +639,7 @@ HANDLE WINAPI LoadRemoteLibraryR(
 			// finally, write our shellcode into the host process
 			if ( !WriteProcessMemory( hProcess, ( LPVOID )uiShellcodeAddr, bootstrap, bootstrapLen, NULL ))
 				break;
-			printf( "Wrote shellcode to 0x%x\n", uiShellcodeAddr );
+			printf( "Wrote shellcode to 0x%llx\n", uiShellcodeAddr );
 
 			// Make sure our changes are written right away
 			FlushInstructionCache( hProcess, lpRemoteLibraryBuffer, nBufferSize );
@@ -650,7 +650,7 @@ HANDLE WINAPI LoadRemoteLibraryR(
 				ResumeThread( hThread );
 			}
 			else {
-				hThread = CreateRemoteThread( hProcess, NULL, 1024 * 1024, ( LPTHREAD_START_ROUTINE )uiShellcodeAddr, lpParameter, ( DWORD )NULL, &dwThreadId );
+				hThread = CreateRemoteThread( hProcess, NULL, 1024 * 1024, ( LPTHREAD_START_ROUTINE )uiShellcodeAddr, lpParameter, 0, &dwThreadId );
 			}
 
 		} while ( 0 );
